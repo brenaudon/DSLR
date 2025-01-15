@@ -91,7 +91,7 @@ def custom_kurt(serie: list[float | int]) -> float:
     kurtosis = (kurtosis / count) - 3  # Excess kurtosis
     return kurtosis
 
-def describe(df):
+def describe(df: pd.DataFrame):
     stats = ['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max']
     summary = pd.DataFrame(index=['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max', 'range', 'iqr', 'var', 'mad', 'skew', 'kurt'])
 

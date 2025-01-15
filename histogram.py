@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import sys
 
-def plot_histograms(df, courses):
+def plot_histograms(df: pd.DataFrame, courses: list[str]):
     houses = ['Gryffindor', 'Slytherin', 'Hufflepuff', 'Ravenclaw']
     colors = {'Gryffindor': 'red', 'Slytherin': 'green', 'Hufflepuff': 'yellow', 'Ravenclaw': 'blue'}
 

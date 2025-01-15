@@ -3,7 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import sys
 
-def plot_pairplot(df):
+def plot_pairplot(df: pd.DataFrame):
     # Drop non-numeric columns and the 'Index' column if it exists
     numeric_df = df.select_dtypes(include=['float64', 'int64']).drop(columns=['Index'], errors='ignore')
 

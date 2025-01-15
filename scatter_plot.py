@@ -4,7 +4,7 @@ import sys
 import numpy as np
 from itertools import combinations
 
-def find_most_correlated_features(df):
+def find_most_correlated_features(df: pd.DataFrame):
     correlation_matrix = df.corr().abs()
     upper_triangle = correlation_matrix.where(
         np.triu(np.ones(correlation_matrix.shape), k=1).astype(bool)
@@ -12,7 +12,7 @@ def find_most_correlated_features(df):
     most_correlated = upper_triangle.stack().idxmax()
     return most_correlated
 
-def plot_scatter(df, feature1, feature2):
+def plot_scatter(df: pd.DataFrame, feature1: str, feature2: str):
     houses = df['Hogwarts House'].unique()
     colors = {'Gryffindor': 'red', 'Slytherin': 'green', 'Hufflepuff': 'yellow', 'Ravenclaw': 'blue'}
 
@@ -27,7 +27,7 @@ def plot_scatter(df, feature1, feature2):
     plt.grid(True)
     plt.show()
 
-def plot_all_scatter_pairs(df):
+def plot_all_scatter_pairs(df: pd.DataFrame):
     numeric_df = df.select_dtypes(include=['float64', 'int64']).drop(columns=['Index'])
     features = numeric_df.columns
     num_features = len(features)
