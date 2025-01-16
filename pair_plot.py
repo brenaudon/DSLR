@@ -53,7 +53,7 @@ def main():
     Usage:
         python pair_plot.py <path_to_csv>
 
-    @raise SystemExit: If the number of command-line arguments is not equal to 2.
+    SystemExit: If the number of command-line arguments is not equal to 2.
     """
     if len(sys.argv) != 2:
         print("Usage: python pair_plot.py <path_to_csv>")

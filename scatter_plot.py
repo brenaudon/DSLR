@@ -112,7 +112,7 @@ def main():
     Usage:
         python scatter_plot.py <path_to_csv> [--all]
 
-    @raise SystemExit: If the number of command-line arguments is not equal to 2 or 3.
+    SystemExit: If the number of command-line arguments is not equal to 2 or 3.
     """
     if len(sys.argv) < 2 or len(sys.argv) > 3:
         print("Usage: python scatter_plot.py <path_to_csv> [--all]")
