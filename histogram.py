@@ -57,11 +57,6 @@ def main():
     This function reads a CSV file specified as a command-line argument,
     generates histograms for each numeric column in the DataFrame,
     and displays the results.
-
-    Usage:
-        python histogram.py <path_to_csv>
-
-    SystemExit: If the number of command-line arguments is not equal to 2.
     """
     if len(sys.argv) != 2:
         print("Usage: python histogram.py <path_to_csv>")
