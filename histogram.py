@@ -1,8 +1,29 @@
+"""
+This script generates histograms of course scores by Hogwarts House.
+
+The script reads a CSV file containing student data, including their Hogwarts House and scores in various courses. It then generates histograms for each course, showing the distribution of scores for each house.
+
+Dependencies:
+    - pandas
+    - matplotlib
+    - sys
+"""
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import sys
 
 def plot_histograms(df: pd.DataFrame, courses: list[str]):
+    """Plot histograms of course scores by Hogwarts House.
+
+    This function generates histograms for each course, showing the distribution
+    of scores for each Hogwarts House. The histograms are displayed in a grid layout.
+
+    @param df: The DataFrame containing student data.
+    @type  df: pd.DataFrame
+    @param courses: The list of courses to plot histograms for.
+    @type  courses: list of str
+    """
     houses = ['Gryffindor', 'Slytherin', 'Hufflepuff', 'Ravenclaw']
     colors = {'Gryffindor': 'red', 'Slytherin': 'green', 'Hufflepuff': 'yellow', 'Ravenclaw': 'blue'}
 
@@ -31,6 +52,17 @@ def plot_histograms(df: pd.DataFrame, courses: list[str]):
     plt.show()
 
 def main():
+    """Main function to read a CSV file and generate histograms.
+
+    This function reads a CSV file specified as a command-line argument,
+    generates histograms for each numeric column in the DataFrame,
+    and displays the results.
+
+    Usage:
+        python histogram.py <path_to_csv>
+
+    @raises SystemExit: If the number of command-line arguments is not equal to 2.
+    """
     if len(sys.argv) != 2:
         print("Usage: python histogram.py <path_to_csv>")
         sys.exit(1)

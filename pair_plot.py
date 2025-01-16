@@ -1,9 +1,29 @@
+"""
+This script generates pair plots of course scores by Hogwarts House.
+
+The script reads a CSV file containing student data, including their Hogwarts House and scores in various courses. It then generates pair plots for all numeric features, showing the distribution and relationships between scores for each house.
+
+Dependencies:
+    - pandas
+    - seaborn
+    - matplotlib
+    - sys
+"""
+
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import sys
 
 def plot_pairplot(df: pd.DataFrame):
+    """Plot pair plots of course scores by Hogwarts House.
+
+    This function generates pair plots for all numeric features, showing the distribution
+    and relationships between scores for each Hogwarts House.
+
+    @param df: The DataFrame containing student data.
+    @type  df: pd.DataFrame
+    """
     # Drop non-numeric columns and the 'Index' column if it exists
     numeric_df = df.select_dtypes(include=['float64', 'int64']).drop(columns=['Index'], errors='ignore')
 
@@ -24,6 +44,17 @@ def plot_pairplot(df: pd.DataFrame):
     plt.show()
 
 def main():
+    """Main function to read a CSV file and generate pair plots.
+
+    This function reads a CSV file specified as a command-line argument,
+    generates pair plots for each numeric column in the DataFrame,
+    and displays the results.
+
+    Usage:
+        python pair_plot.py <path_to_csv>
+
+    @raises SystemExit: If the number of command-line arguments is not equal to 2.
+    """
     if len(sys.argv) != 2:
         print("Usage: python pair_plot.py <path_to_csv>")
         sys.exit(1)

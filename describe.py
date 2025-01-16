@@ -1,9 +1,30 @@
+"""
+This script provides functions to generate descriptive statistics for a DataFrame.
+
+The script includes custom implementations for calculating various statistics.
+
+Dependencies:
+    - pandas
+    - sys
+"""
+
 import pandas as pd
 import sys
 
 pd.options.display.float_format = '{:.6f}'.format
 
 def custom_count(serie: list[float | int]) -> float:
+    """Return the count of non-NaN values in the series.
+
+    This function iterates through the series and counts the number of
+    non-NaN values.
+
+    @param serie: The series of values to count.
+    @type  serie: list of float or int
+
+    @return: The count of non-NaN values.
+    @rtype:  float
+    """
     count = 0
     for value in serie:
         if value == value:  # Check for NaN values
@@ -11,6 +32,16 @@ def custom_count(serie: list[float | int]) -> float:
     return count
 
 def custom_sum(serie: list[float | int]) -> float:
+    """Return the sum of non-NaN values in the series.
+
+    This function iterates through the series and sums the non-NaN values.
+
+    @param serie: The series of values to sum.
+    @type  serie: list of float or int
+
+    @return: The sum of non-NaN values.
+    @rtype:  float
+    """
     total = 0
     for value in serie:
         if value == value:  # Check for NaN values
@@ -18,9 +49,31 @@ def custom_sum(serie: list[float | int]) -> float:
     return total
 
 def custom_mean(serie: list[float | int]) -> float:
+    """Return the mean of non-NaN values in the series.
+
+    This function calculates the mean by dividing the sum of non-NaN values
+    by their count.
+
+    @param serie: The series of values to calculate the mean.
+    @type  serie: list of float or int
+
+    @return: The mean of non-NaN values.
+    @rtype:  float
+    """
     return custom_sum(serie) / custom_count(serie)
 
 def custom_var(serie: list[float | int]) -> float:
+    """Return the variance of non-NaN values in the series.
+
+    This function calculates the variance by summing the squared differences
+    from the mean and dividing by the count minus one.
+
+    @param serie: The series of values to calculate the variance.
+    @type  serie: list of float or int
+
+    @return: The variance of non-NaN values.
+    @rtype:  float
+    """
     mean = custom_mean(serie)
     variance = 0
     count = 0
@@ -32,6 +85,16 @@ def custom_var(serie: list[float | int]) -> float:
     return variance
 
 def custom_min(serie: list[float | int]) -> float:
+    """Return the minimum of non-NaN values in the series.
+
+    This function iterates through the series and finds the minimum non-NaN value.
+
+    @param serie: The series of values to find the minimum.
+    @type  serie: list of float or int
+
+    @return: The minimum of non-NaN values.
+    @rtype:  float
+    """
     min_value = float('inf')
     for value in serie:
         if value == value:  # Check for NaN values
@@ -40,6 +103,19 @@ def custom_min(serie: list[float | int]) -> float:
     return min_value
 
 def custom_quantile(serie: list[float | int], q: float) -> float:
+    """Return the q-th quantile of non-NaN values in the series.
+
+    This function calculates the quantile by sorting the non-NaN values and
+    finding the appropriate value based on the quantile.
+
+    @param serie: The series of values to calculate the quantile.
+    @type  serie: list of float or int
+    @param q: The quantile to calculate (between 0 and 1).
+    @type  q: float
+
+    @return: The q-th quantile of non-NaN values.
+    @rtype:  float
+    """
     sorted_series = sorted(value for value in serie if value == value)  # Remove NaN values and sort
     n = len(sorted_series)
     index = q * (n - 1)
@@ -52,6 +128,16 @@ def custom_quantile(serie: list[float | int], q: float) -> float:
         return sorted_series[lower]
 
 def custom_max(serie: list[float | int]) -> float:
+    """Return the maximum of non-NaN values in the series.
+
+    This function iterates through the series and finds the maximum non-NaN value.
+
+    @param serie: The series of values to find the maximum.
+    @type  serie: list of float or int
+
+    @return: The maximum of non-NaN values.
+    @rtype:  float
+    """
     max_value = float('-inf')
     for value in serie:
         if value == value:  # Check for NaN values
@@ -60,6 +146,17 @@ def custom_max(serie: list[float | int]) -> float:
     return max_value
 
 def custom_mad(serie: list[float | int]) -> float:
+    """Return the mean absolute deviation of non-NaN values in the series.
+
+    This function calculates the mean absolute deviation by summing the absolute
+    deviations from the mean and dividing by the count.
+
+    @param serie: The series of values to calculate the mean absolute deviation.
+    @type  serie: list of float or int
+
+    @return: The mean absolute deviation of non-NaN values.
+    @rtype:  float
+    """
     mean = custom_mean(serie)
     count = custom_count(serie)
     total_deviation = 0
@@ -70,6 +167,17 @@ def custom_mad(serie: list[float | int]) -> float:
     return mad
 
 def custom_skew(serie: list[float] | list[int]) -> float:
+    """Return the skewness of non-NaN values in the series.
+
+    This function calculates the skewness by summing the cubed deviations from
+    the mean, normalized by the standard deviation, and dividing by the count.
+
+    @param serie: The series of values to calculate the skewness.
+    @type  serie: list of float or int
+
+    @return: The skewness of non-NaN values.
+    @rtype:  float
+    """
     mean = custom_mean(serie)
     std_dev = custom_var(serie) ** 0.5
     count = custom_count(serie)
@@ -81,6 +189,18 @@ def custom_skew(serie: list[float] | list[int]) -> float:
     return skewness
 
 def custom_kurt(serie: list[float | int]) -> float:
+    """Return the kurtosis of non-NaN values in the series.
+
+    This function calculates the kurtosis by summing the quartic deviations from
+    the mean, normalized by the standard deviation, and dividing by the count,
+    then subtracting 3 to get the excess kurtosis.
+
+    @param serie: The series of values to calculate the kurtosis.
+    @type  serie: list of float or int
+
+    @return: The kurtosis of non-NaN values.
+    @rtype:  float
+    """
     mean = custom_mean(serie)
     std_dev = custom_var(serie) ** 0.5
     count = custom_count(serie)
@@ -92,6 +212,19 @@ def custom_kurt(serie: list[float | int]) -> float:
     return kurtosis
 
 def describe(df: pd.DataFrame):
+    """Generate descriptive statistics for a DataFrame.
+
+    This function calculates various descriptive statistics for each numeric
+    column in the DataFrame, including count, mean, standard deviation, min,
+    25th percentile, median, 75th percentile, max, range, interquartile range,
+    variance, mean absolute deviation, skewness, and kurtosis.
+
+    @param df: The DataFrame to describe.
+    @type  df: pd.DataFrame
+
+    @return: A DataFrame containing the descriptive statistics.
+    @rtype:  pd.DataFrame
+    """
     stats = ['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max']
     summary = pd.DataFrame(index=['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max', 'range', 'iqr', 'var', 'mad', 'skew', 'kurt'])
 
@@ -117,6 +250,17 @@ def describe(df: pd.DataFrame):
     print(summary)
 
 def main():
+    """Main function to read a CSV file and generate descriptive statistics.
+
+    This function reads a CSV file specified as a command-line argument,
+    generates descriptive statistics for each numeric column in the DataFrame,
+    and prints the results.
+
+    Usage:
+        python describe.py <path_to_csv>
+
+    @raises SystemExit: If the number of command-line arguments is not equal to 2.
+    """
     if len(sys.argv) != 2:
         print("Usage: python describe.py <path_to_csv>")
         sys.exit(1)
