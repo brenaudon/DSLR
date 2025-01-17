@@ -1,25 +1,89 @@
+"""
+This script trains a logistic regression model. It can use various gradient descent methods.
+
+The script reads a training CSV file, loads the feature variables and target variable,
+trains the logistic regression model using the specified gradient descent method,
+and saves the learned parameters to a file.
+
+Dependencies:
+    - numpy
+    - pandas
+    - matplotlib
+    - sys
+"""
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import sys
 
-# Initialize softmax function
-def softmax(logits):
+
+def softmax(logits: np.ndarray) -> np.ndarray:
+    """
+    Compute the softmax of the input logits.
+
+    @param logits: The input logits.
+    @type  logits: np.ndarray
+
+    @return: The softmax probabilities.
+    @rtype:  np.ndarray
+    """
     exp_logits = np.exp(logits - np.max(logits, axis=1, keepdims=True))  # Stability adjustment
     return exp_logits / np.sum(exp_logits, axis=1, keepdims=True)
 
-# Cost function for logistic regression
-def compute_cost(y, y_pred):
+
+def compute_cost(y: np.ndarray, y_pred: np.ndarray) -> float:
+    """
+    Compute the cost for logistic regression.
+
+    @param y: The true labels.
+    @type  y: np.ndarray
+    @param y_pred: The predicted labels.
+    @type  y_pred: np.ndarray
+
+    @return: The computed cost.
+    @rtype:  float
+    """
     m = y.shape[0]
     return -1/m * np.sum(y * np.log(y_pred) + (1 - y) * np.log(1 - y_pred))
 
-# Gradient calculation for logistic regression
-def compute_gradient(X, y, y_pred):
+
+def compute_gradient(X: np.ndarray, y: np.ndarray, y_pred: np.ndarray) -> np.ndarray:
+    """
+    Compute the gradient for logistic regression.
+
+    @param X: The input features.
+    @type  X: np.ndarray
+    @param y: The true labels.
+    @type  y: np.ndarray
+    @param y_pred: The predicted labels.
+    @type  y_pred: np.ndarray
+
+    @return: The computed gradient.
+    @rtype:  np.ndarray
+    """
     m = X.shape[0]
     return 1/m * np.dot(X.T, (y_pred - y))
 
-# Gradient descent
-def gradient_descent(X, y, num_classes, learning_rate=0.1, num_iterations=1000):
+
+def gradient_descent(X: np.ndarray, y: np.ndarray, num_classes: int, learning_rate: float = 0.1, num_iterations: int = 1000) -> tuple[np.ndarray, list[float]]:
+    """
+    Perform gradient descent to learn the model parameters.
+
+    @param X: The input features.
+    @type  X: np.ndarray
+    @param y: The true labels.
+    @type  y: np.ndarray
+    @param num_classes: The number of classes.
+    @type  num_classes: int
+    @param learning_rate: The learning rate for gradient descent.
+    @type  learning_rate: float
+    @param num_iterations: The number of iterations for gradient descent.
+    @type  num_iterations: int
+
+    @return: The learned parameters and the cost history.
+    @rtype:  tuple[np.ndarray, list[float]]
+    """
     n_samples, n_features = X.shape
     theta = np.random.randn(n_features, num_classes)  # Random initialization
     cost_history = []
@@ -44,9 +108,27 @@ def gradient_descent(X, y, num_classes, learning_rate=0.1, num_iterations=1000):
 
     return theta, cost_history
 
+
 # BONUS ---------------------------------------------------------------------------
-# Stochastic gradient descent
-def stochastic_gradient_descent(X, y, num_classes, learning_rate=0.1, num_iterations=1000):
+
+def stochastic_gradient_descent(X: np.ndarray, y: np.ndarray, num_classes: int, learning_rate: float = 0.1, num_iterations: int = 1000) -> tuple[np.ndarray, list[float]]:
+    """
+    Perform stochastic gradient descent (based on one random element for each iteration) to learn the model parameters.
+
+    @param X: The input features.
+    @type  X: np.ndarray
+    @param y: The true labels.
+    @type  y: np.ndarray
+    @param num_classes: The number of classes.
+    @type  num_classes: int
+    @param learning_rate: The learning rate for gradient descent.
+    @type  learning_rate: float
+    @param num_iterations: The number of iterations for gradient descent.
+    @type  num_iterations: int
+
+    @return: The learned parameters and the cost history.
+    @rtype:  tuple[np.ndarray, list[float]]
+    """
     n_samples, n_features = X.shape
     theta = np.random.randn(n_features, num_classes)  # Random initialization
     cost_history = []
@@ -76,8 +158,27 @@ def stochastic_gradient_descent(X, y, num_classes, learning_rate=0.1, num_iterat
 
     return theta, cost_history
 
-# Mini-batch gradient descent
-def mini_batch_gradient_descent(X, y, num_classes, learning_rate=0.1, num_iterations=1000, batch_size=3):
+
+def mini_batch_gradient_descent(X: np.ndarray, y: np.ndarray, num_classes: int, learning_rate: float = 0.1, num_iterations: int = 1000, batch_size: int = 3) -> tuple[np.ndarray, list[float]]:
+    """
+    Perform mini-batch gradient descent (based on batch_size random elements for each iteration) to learn the model parameters.
+
+    @param X: The input features.
+    @type  X: np.ndarray
+    @param y: The true labels.
+    @type  y: np.ndarray
+    @param num_classes: The number of classes.
+    @type  num_classes: int
+    @param learning_rate: The learning rate for gradient descent.
+    @type  learning_rate: float
+    @param num_iterations: The number of iterations for gradient descent.
+    @type  num_iterations: int
+    @param batch_size: The size of each mini-batch.
+    @type  batch_size: int
+
+    @return: The learned parameters and the cost history.
+    @rtype:  tuple[np.ndarray, list[float]]
+    """
     n_samples, n_features = X.shape
     theta = np.random.randn(n_features, num_classes)  # Random initialization
     cost_history = []
@@ -113,8 +214,27 @@ def mini_batch_gradient_descent(X, y, num_classes, learning_rate=0.1, num_iterat
 
     return theta, cost_history
 
-# Fractionned batch gradient descent
-def fractionned_batch_gradient_descent(X, y, num_classes, learning_rate=0.1, num_iterations=1000, fraction_size=4):
+
+def fractionned_batch_gradient_descent(X: np.ndarray, y: np.ndarray, num_classes: int, learning_rate: float = 0.1, num_iterations: int = 1000, fraction_size: int = 4) -> tuple[np.ndarray, list[float]]:
+    """
+    Perform fractionned batch gradient descent (based on a fraction of the dataset for each iteration) to learn the model parameters.
+
+    @param X: The input features.
+    @type  X: np.ndarray
+    @param y: The true labels.
+    @type  y: np.ndarray
+    @param num_classes: The number of classes.
+    @type  num_classes: int
+    @param learning_rate: The learning rate for gradient descent.
+    @type  learning_rate: float
+    @param num_iterations: The number of iterations for gradient descent.
+    @type  num_iterations: int
+    @param fraction_size: The size of each fraction.
+    @type  fraction_size: int
+
+    @return: The learned parameters and the cost history.
+    @rtype:  tuple[np.ndarray, list[float]]
+    """
     n_samples, n_features = X.shape
     theta = np.random.randn(n_features, num_classes)  # Random initialization
     cost_history = []
