@@ -10,12 +10,14 @@ Dependencies:
     - pandas
     - matplotlib
     - sys
+    - os
 """
 
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import sys
+import os
 
 
 def softmax(logits: np.ndarray) -> np.ndarray:
@@ -274,15 +276,21 @@ def main():
     and prints the learned parameters.
     """
     if len(sys.argv) < 2:
-        method = 'gd'
-    else:
-        method = sys.argv[1]
+        print("Usage: python logreg_train.py <path_to_dataset_train> [method]")
+        sys.exit(1)
+
+    dataset_path = sys.argv[1]
+    method = sys.argv[2] if len(sys.argv) > 2 else 'gd'
 
     # Load the dataset
-    dataset_train = pd.read_csv('datasets/dataset_train.csv')
+    dataset_train = pd.read_csv(dataset_path)
+
+    # Construct the path to config.csv relative to the script's location
+    script_dir = os.path.dirname(__file__)
+    config_path = os.path.join(script_dir, 'config.csv')
 
     # Read the list of courses from config.csv
-    config = pd.read_csv('config.csv')
+    config = pd.read_csv(config_path)
     courses = config['courses'].tolist()
 
     # Extract the feature variables (columns listed in config.csv)
@@ -340,7 +348,8 @@ def main():
     plt.show()
 
     # Save the learned parameters to a file
-    np.savetxt('theta.csv', theta, delimiter=',')
+    theta_path = os.path.join(script_dir, 'theta.csv')
+    np.savetxt(theta_path, theta, delimiter=',')
 
 
 if __name__ == '__main__':

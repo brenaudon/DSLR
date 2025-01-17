@@ -7,11 +7,15 @@ Dependencies:
     - numpy
     - pandas
     - logreg_train.py
+    - sys
+    - os
 """
 
 import numpy as np
 import pandas as pd
 from logreg_train import softmax
+import os
+import sys
 
 def predict(X: np.ndarray, theta: np.ndarray) -> np.ndarray:
     """
@@ -35,11 +39,21 @@ def predict(X: np.ndarray, theta: np.ndarray) -> np.ndarray:
 
 def main():
     """Main function to read a test CSV file, load trained weights, make predictions, and save them to a file."""
+    if len(sys.argv) < 2:
+        print("Usage: python logreg_predict.py <path_to_dataset_test>")
+        sys.exit(1)
+
+    dataset_path = sys.argv[1]
+
     # Load the test dataset
-    dataset_test = pd.read_csv('datasets/dataset_test.csv')
+    dataset_test = pd.read_csv(dataset_path)
+
+    # Construct the path to config.csv relative to the script's location
+    script_dir = os.path.dirname(__file__)
+    config_path = os.path.join(script_dir, 'config.csv')
 
     # Read the list of courses from config.csv
-    config = pd.read_csv('config.csv')
+    config = pd.read_csv(config_path)
     courses = config['courses'].tolist()
 
     # Extract the feature variables (columns listed in config.csv)
@@ -52,7 +66,8 @@ def main():
     X_test = (X_test - X_test.mean(axis=0)) / X_test.std(axis=0)
 
     # Load the trained weights
-    theta = np.loadtxt('theta.csv', delimiter=',')
+    theta_path = os.path.join(script_dir, 'theta.csv')
+    theta = np.loadtxt(theta_path, delimiter=',')
 
     # Make predictions
     y_pred = predict(X_test, theta)
@@ -75,7 +90,8 @@ def main():
     })
 
     # Save the predictions to houses.csv
-    output_df.to_csv('houses.csv', index=False)
+    output_path = os.path.join(script_dir, 'houses.csv')
+    output_df.to_csv(output_path, index=False)
 
 if __name__ == '__main__':
     main()
