@@ -1,5 +1,5 @@
 """
-This script provides functions to generate descriptive statistics for a DataFrame.
+This script generate descriptive statistics for a DataFrame.
 
 The script includes custom implementations for calculating various statistics.
 
