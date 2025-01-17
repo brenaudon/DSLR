@@ -1,3 +1,5 @@
 .venv/
 datasets/
 apidocs/
+theta.csv
+houses.csv
