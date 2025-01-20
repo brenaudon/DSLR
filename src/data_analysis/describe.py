@@ -12,6 +12,12 @@ import pandas as pd
 import sys
 
 pd.options.display.float_format = '{:.6f}'.format
+# Set display options to avoid truncation
+pd.set_option('display.max_rows', None)  # Display all rows
+pd.set_option('display.max_columns', None)  # Display all columns
+pd.set_option('display.width', None)  # Adjust the display width to the terminal width
+pd.set_option('display.max_colwidth', None)  # Display full column width
+
 
 def custom_count(serie: list[float | int]) -> float:
     """Return the count of non-NaN values in the series.
