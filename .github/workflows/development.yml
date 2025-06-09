@@ -10,15 +10,28 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-      - uses: actions/setup-python@v2
-      - uses: syphar/restore-virtualenv@v1
-        id: cache-virtualenv
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.12'
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
-      - uses: syphar/restore-pip-download-cache@v1
-        if: steps.cache-virtualenv.outputs.cache-hit != 'true'
+      - name: Cache virtualenv
+        uses: actions/cache@v4
+        with:
+          path: venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('requirements.txt') }}
 
-      - run: pip install -r requirements.txt
-        if: steps.cache-virtualenv.outputs.cache-hit != 'true'
+      - name: Set up virtual environment and install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
 
   build_docs:
     runs-on: ubuntu-22.04
@@ -26,13 +39,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-      - uses: actions/setup-python@v2
-      - uses: syphar/restore-virtualenv@v1
-        id: cache-virtualenv
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.12'
+      - name: Restore cached virtualenv
+        uses: actions/cache@v4
+        with:
+          path: venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('requirements.txt') }}
 
       - name: Build documentation
         id: docs_build
-        run: sh ./scripts/pydoctor.sh
+        run: |
+          source venv/bin/activate
+          sh ./scripts/pydoctor.sh
 
       - name: Upload documentation as artifact
         id: docs_artifact
